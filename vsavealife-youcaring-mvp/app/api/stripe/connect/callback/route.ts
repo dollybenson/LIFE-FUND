@@ -1,9 +1,10 @@
 
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { getPrisma } from '@/lib/prisma'
 import { getStripe } from '@/lib/stripe'
 
 export async function GET(req: Request) {
+  const prisma = getPrisma()
   const stripe = getStripe()
 
   const { searchParams } = new URL(req.url)
@@ -15,13 +16,10 @@ export async function GET(req: Request) {
   }
 
   const token = await stripe.oauth.token({ grant_type: 'authorization_code', code })
-
   const connectedAccountId = token.stripe_user_id
+
   if (!connectedAccountId) {
-    return NextResponse.json(
-      { error: 'Stripe did not return stripe_user_id.' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: 'Stripe did not return stripe_user_id' }, { status: 400 })
   }
 
   const acct = await stripe.accounts.retrieve(connectedAccountId)
@@ -35,9 +33,5 @@ export async function GET(req: Request) {
     },
   })
 
-  return NextResponse.redirect(
-    `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?stripe=connected`
-  )
+  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard?stripe=connected`)
 }
-
-
