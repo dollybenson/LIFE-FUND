@@ -1,9 +1,10 @@
 export const dynamic = 'force-dynamic'
 import Link from 'next/link'
-import { prisma } from '@/lib/prisma'
+import { getPrisma } from '@/lib/prisma'
 import { CampaignCard } from '@/components/CampaignCard'
 
 export default async function HomePage() {
+  const prisma = getPrisma()
   const campaigns = await prisma.campaign.findMany({
     where: { status: 'PUBLISHED', featured: true },
     orderBy: [{ raisedMinor: 'desc' }, { updatedAt: 'desc' }],
