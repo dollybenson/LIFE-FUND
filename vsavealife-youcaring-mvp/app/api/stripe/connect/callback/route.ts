@@ -4,6 +4,7 @@ import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 
 export async function GET(req: Request) {
+  const stripe = getStripe()
   const { searchParams } = new URL(req.url)
 
   const code = searchParams.get('code')
