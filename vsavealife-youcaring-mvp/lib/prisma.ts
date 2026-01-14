@@ -1,9 +1,17 @@
+
 import { PrismaClient } from '@prisma/client'
 
-declare global {
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined
-}
+let prismaSingleton: PrismaClient | null = null
 
-export const prisma = globalThis.prisma || new PrismaClient()
-if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma
+export function getPrisma() {
+  const url = process.env.DATABASE_URL
+  if (!url) {
+    throw new Error('Missing DATABASE_URL environment variable')
+  }
+
+  if (!prismaSingleton) {
+    prismaSingleton = new PrismaClient()
+  }
+
+  return prismaSingleton
+}
