@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { SearchBar } from './SearchBar'
 
@@ -11,9 +12,20 @@ export function Header() {
           <span className="font-semibold text-slate-900 hidden sm:inline">V Save a Life Foundation</span>
         </Link>
 
-        <div className="flex-1">
-          <SearchBar />
-        </div>
+        
+<div className="flex-1">
+  <Suspense
+    fallback={
+      <input
+        placeholder="Search campaigns by title…"
+        className="w-full rounded-full border border-slate-200 px-4 py-2 text-sm"
+      />
+    }
+  >
+    <SearchBar />
+  </Suspense>
+</div>
+
 
         <div className="flex items-center gap-2">
           <Link href="/dashboard" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">
