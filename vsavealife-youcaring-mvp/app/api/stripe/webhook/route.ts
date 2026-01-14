@@ -1,4 +1,4 @@
-
+export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { getPrisma } from '@/lib/prisma'
