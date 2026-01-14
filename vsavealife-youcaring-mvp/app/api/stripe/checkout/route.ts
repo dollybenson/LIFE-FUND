@@ -7,6 +7,7 @@ const ALLOWED = new Set(['usd','eur','gbp'])
 
 export async function POST(req: Request) {
   try {
+    const stripe = getStripe()
     const { campaignId, connectedAccountId, donationAmountMinor } = await req.json()
 
     if (!campaignId || !connectedAccountId) {
