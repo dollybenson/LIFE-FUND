@@ -1,10 +1,11 @@
 
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
-import { prisma } from '@/lib/prisma'
+import { getPrisma } from '@/lib/prisma'
 import { getStripe } from '@/lib/stripe'
 
 export async function POST(req: Request) {
+  const prisma = getPrisma()
   const stripe = getStripe()
 
   const body = await req.text()
@@ -25,7 +26,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 })
   }
 
-  // Mark donation paid and update campaign total
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object
 
@@ -52,4 +52,3 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ received: true })
 }
-
