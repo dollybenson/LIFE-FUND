@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { getPrisma } from '@/lib/prisma'
 import { getStripe } from '@/lib/stripe'
 import { MIN_DONATION_MINOR, platformFeeMinor } from '@/lib/money'
 
