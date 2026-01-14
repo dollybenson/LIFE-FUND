@@ -1,10 +1,11 @@
 export const dynamic = 'force-dynamic'
-import { prisma } from '@/lib/prisma'
+import { getPrisma } from '@/lib/prisma'
 import { CampaignCard } from '@/components/CampaignCard'
 import { CategoryChips } from '@/components/CategoryChips'
 import { CurrencyTabs } from '@/components/CurrencyTabs'
 
 export default async function ExplorePage({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
+  const prisma = getPrisma()
   const category = typeof searchParams.category === 'string' ? searchParams.category : ''
   const q = typeof searchParams.q === 'string' ? searchParams.q : ''
   const currency = typeof searchParams.currency === 'string' ? searchParams.currency : 'all'
