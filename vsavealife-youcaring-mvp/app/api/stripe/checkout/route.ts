@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { MIN_DONATION_MINOR, platformFeeMinor } from '@/lib/money'
 
 const ALLOWED = new Set(['usd','eur','gbp'])
