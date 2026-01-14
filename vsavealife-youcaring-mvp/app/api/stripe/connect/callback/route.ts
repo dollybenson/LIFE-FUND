@@ -1,12 +1,12 @@
 
 import { NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
+import { getStripe } from '@/lib/stripe'
 
 export async function GET(req: Request) {
   const stripe = getStripe()
-  const { searchParams } = new URL(req.url)
 
+  const { searchParams } = new URL(req.url)
   const code = searchParams.get('code')
   const userId = searchParams.get('userId')
 
@@ -14,19 +14,16 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Missing code or userId' }, { status: 400 })
   }
 
-  // Exchange the authorization code for an access token + connected account id
   const token = await stripe.oauth.token({ grant_type: 'authorization_code', code })
 
-  // ✅ TypeScript-safe check (stripe_user_id can be string | undefined)
   const connectedAccountId = token.stripe_user_id
   if (!connectedAccountId) {
     return NextResponse.json(
-      { error: 'Stripe did not return a connected account id (stripe_user_id).' },
+      { error: 'Stripe did not return stripe_user_id.' },
       { status: 400 }
     )
   }
 
-  // Retrieve account to store readiness flags
   const acct = await stripe.accounts.retrieve(connectedAccountId)
 
   await prisma.user.update({
@@ -38,6 +35,9 @@ export async function GET(req: Request) {
     },
   })
 
-  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard?stripe=connected`)
+  return NextResponse.redirect(
+    `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?stripe=connected`
+  )
 }
+
 
